@@ -12,5 +12,5 @@ export declare class CmsApp extends App implements ICmsApp {
         options?: TOptions;
     }>);
     register(payload: Parameters<ICmsApp["register"]>[number]): ReturnType<ICmsApp["register"]>;
-    getRoutes(): ReturnType<ICmsApp["getRoutes"]>;
+    getRoutes({ pathname }?: Parameters<ICmsApp["getRoutes"]>[number]): ReturnType<ICmsApp["getRoutes"]>;
 }

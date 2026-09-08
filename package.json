@@ -42,7 +42,7 @@
         "test": "bun --hot run __test/index.ts"
     },
     "types": "./dist/index.d.ts",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "exports": {
         ".": {
             "import": "./dist/index.js",

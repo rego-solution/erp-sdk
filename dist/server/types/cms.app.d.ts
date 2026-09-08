@@ -8,7 +8,9 @@ export interface ICmsApp extends IApp {
     register(payload: {
         blueprintId?: string;
     }): ICmsApp;
-    getRoutes(): Promise<{
+    getRoutes(payload?: {
+        pathname?: string;
+    }): Promise<{
         hostname?: string | null;
         routes?: Array<TBlueprintRoute> | null;
         data?: {

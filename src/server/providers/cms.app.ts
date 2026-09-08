@@ -30,7 +30,11 @@ export class CmsApp extends App implements ICmsApp {
         return this;
     }
 
-    async getRoutes(): ReturnType<ICmsApp["getRoutes"]> {
+    async getRoutes({
+        pathname = "/"
+    }: Parameters<ICmsApp["getRoutes"]>[number] = {}): ReturnType<
+        ICmsApp["getRoutes"]
+    > {
         const {
             params: {
                 credential: { workspaceId, appId },
@@ -54,7 +58,7 @@ export class CmsApp extends App implements ICmsApp {
             const response = await fetch(
                 `${Variables.baseUri}/cms/v${
                     options?.version || this.defaultVersion
-                }/blueprints/${this.#blueprintId}`,
+                }/blueprints/${this.#blueprintId}?pathname=${pathname}`,
                 {
                     method: "GET",
                     headers: requestHeaders
