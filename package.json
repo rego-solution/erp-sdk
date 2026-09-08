@@ -36,13 +36,13 @@
         "url": "git+https://github.com/rego-solution/erp-sdk"
     },
     "scripts": {
-        "build:browser": "tsc --noEmit && APP=\"browser\" bun run ./app.build.ts",
-        "build:server": "tsc --noEmit && APP=\"server\" bun run ./app.build.ts",
+        "build:browser": "tsc --noEmit && APP=\"browser\" bun run ./app.build.ts && tsc --emitDeclarationOnly",
+        "build:server": "tsc --noEmit && APP=\"server\" bun run ./app.build.ts && tsc --emitDeclarationOnly",
         "format": "prettier \"./src/**/*.ts\" --write",
         "test": "bun --hot run __test/index.ts"
     },
     "types": "./dist/index.d.ts",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "exports": {
         ".": {
             "import": "./dist/index.js",
