@@ -1,0 +1,63 @@
+{
+    "author": "Trần Đức Tâm (Neo)",
+    "bugs": {
+        "url": "https://github.com/rego-solution/erp-sdk/issues"
+    },
+    "dependencies": {
+        "jose": "^6.2.12"
+    },
+    "devDependencies": {
+        "@types/bun": "^1.4.1",
+        "@types/node": "^26.5.0",
+        "prettier": "^3.9.6",
+        "typescript": "^7.0.2"
+    },
+    "files": [
+        "./dist",
+        "./src"
+    ],
+    "homepage": "https://github.com/rego-solution/erp-sdk#readme",
+    "keywords": [
+        "typescript",
+        "ts",
+        "bun",
+        "node",
+        "SDK"
+    ],
+    "license": "MIT",
+    "main": "./dist/index.js",
+    "name": "@regojs/erp-sdk",
+    "private": false,
+    "publishConfig": {
+        "access": "public"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/rego-solution/erp-sdk"
+    },
+    "scripts": {
+        "build:browser": "tsc --noEmit && APP=\"browser\" bun run ./app.build.ts",
+        "build:server": "tsc --noEmit && APP=\"server\" bun run ./app.build.ts",
+        "format": "prettier \"./src/**/*.ts\" --write",
+        "test": "bun --hot run __test/index.ts"
+    },
+    "types": "./dist/index.d.ts",
+    "version": "1.0.0",
+    "exports": {
+        ".": {
+            "import": "./dist/index.js",
+            "require": "./dist/index.js",
+            "types": "./dist/index.d.ts"
+        },
+        "./browser": {
+            "import": "./dist/browser/index.js",
+            "require": "./dist/browser/index.js",
+            "types": "./dist/browser/index.d.ts"
+        },
+        "./server": {
+            "import": "./dist/server/index.js",
+            "require": "./dist/server/index.js",
+            "types": "./dist/server/index.d.ts"
+        }
+    }
+}
