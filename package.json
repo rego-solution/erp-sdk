@@ -44,7 +44,7 @@
         "test": "bun --hot run __test/index.ts"
     },
     "types": "./dist/index.d.ts",
-    "version": "1.0.4",
+    "version": "1.0.5",
     "exports": {
         ".": {
             "import": "./dist/index.js",
@@ -60,11 +60,6 @@
             "import": "./dist/browser/index.js",
             "require": "./dist/browser/index.js",
             "types": "./dist/browser/index.d.ts"
-        },
-        "./browser/vanilla": {
-            "import": "./dist/browser/vanilla/index.js",
-            "require": "./dist/browser/vanilla/index.js",
-            "types": "./dist/browser/vanilla/index.d.ts"
         }
     }
 }
