@@ -4,10 +4,11 @@
         "url": "https://github.com/rego-solution/erp-sdk/issues"
     },
     "dependencies": {
-        "jose": "^6.2.12"
+        "jose": "^6.2.12",
+        "zod": "^4.6.1"
     },
     "devDependencies": {
-        "@types/bun": "^1.4.1",
+        "@types/bun": "^1.4.2",
         "@types/node": "^26.5.0",
         "prettier": "^3.9.6",
         "typescript": "^7.0.2"
@@ -22,7 +23,8 @@
         "ts",
         "bun",
         "node",
-        "SDK"
+        "SDK",
+        "zod"
     ],
     "license": "MIT",
     "main": "./dist/index.js",
@@ -42,22 +44,27 @@
         "test": "bun --hot run __test/index.ts"
     },
     "types": "./dist/index.d.ts",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "exports": {
         ".": {
             "import": "./dist/index.js",
             "require": "./dist/index.js",
             "types": "./dist/index.d.ts"
         },
+        "./server": {
+            "import": "./dist/server/index.js",
+            "require": "./dist/server/index.js",
+            "types": "./dist/server/index.d.ts"
+        },
         "./browser": {
             "import": "./dist/browser/index.js",
             "require": "./dist/browser/index.js",
             "types": "./dist/browser/index.d.ts"
         },
-        "./server": {
-            "import": "./dist/server/index.js",
-            "require": "./dist/server/index.js",
-            "types": "./dist/server/index.d.ts"
+        "./browser/vanilla": {
+            "import": "./dist/browser/vanilla/index.js",
+            "require": "./dist/browser/vanilla/index.js",
+            "types": "./dist/browser/vanilla/index.d.ts"
         }
     }
 }

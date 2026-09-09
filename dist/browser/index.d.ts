@@ -1,1 +1,1 @@
-export {};
+export * as Vanilla from "./vanilla";

@@ -1,0 +1,1 @@
+export { RegoProvider } from "./regoProvider";
