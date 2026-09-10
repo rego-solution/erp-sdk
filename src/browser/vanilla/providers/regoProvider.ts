@@ -1,14 +1,36 @@
 import type { IRegoProvider } from "../types";
 
+import { object } from "zod";
 import { Enums } from "../constants";
-import { routeSchema } from "../validators";
+import {
+    dataSchema,
+    metadataSchema,
+    routeSchema,
+    staticDataSchema
+} from "../validators";
+
+const fullDataSchema = object({
+    metadata: metadataSchema,
+    data: dataSchema,
+    staticData: staticDataSchema
+});
 
 export class RegoProvider implements IRegoProvider {
-    constructor(private readonly document: Document) {}
+    #routes: IRegoProvider["routes"];
+    #staticDatas: Map<string, IRegoProvider["staticData"]> = new Map();
+    #datas: Map<string, IRegoProvider["data"]> = new Map();
+    #metadatas: Map<string, IRegoProvider["metadata"]> = new Map();
 
-    getRoutes(): ReturnType<IRegoProvider["getRoutes"]> {
-        const scriptElement = this.document.querySelector(
-            `script#${Enums.EScriptIds.routesId}[type="application/json"]`
+    constructor(private readonly window: Window) {
+        this.#parseRoutes();
+        this.#parseMetadata();
+        this.#parseStaticData();
+        this.#parseData();
+    }
+
+    #parseRoutes() {
+        const scriptElement = this.window.document.body.querySelector(
+            `script#${Enums.EScriptIds.routes}[type="application/json"]`
         );
 
         if (!scriptElement) {
@@ -23,15 +45,167 @@ export class RegoProvider implements IRegoProvider {
                 return;
             }
 
-            return parsedData
+            this.#routes = parsedData
                 .map((route) => {
                     const validation = routeSchema.safeParse(route);
                     return !validation.success ? null : validation.data;
                 })
                 .filter((route) => !!route);
         } catch (error) {
-            console.error("Error on parse JSON:", error);
+            console.error("Error on parse routes:", error);
             return;
         }
+    }
+
+    #parseStaticData() {
+        const scriptElement = this.window.document.body.querySelector(
+            `script#${Enums.EScriptIds.staticData}[type="application/json"]`
+        );
+
+        if (!scriptElement) {
+            return;
+        }
+
+        try {
+            const { pathname, search } = this.window.location;
+            const jsonString = scriptElement.textContent.trim();
+            const parsedData = JSON.parse(jsonString);
+            const validation = staticDataSchema.safeParse(parsedData);
+
+            if (!validation.success) {
+                return;
+            }
+
+            this.#staticDatas.set(`${pathname}${search}`, validation.data);
+        } catch (error) {
+            console.error("Error on parse static data:", error);
+            return;
+        }
+    }
+
+    #parseData() {
+        const scriptElement = this.window.document.body.querySelector(
+            `script#${Enums.EScriptIds.data}[type="application/json"]`
+        );
+
+        if (!scriptElement) {
+            return;
+        }
+
+        try {
+            const { pathname, search } = this.window.location;
+            const jsonString = scriptElement.textContent.trim();
+            const parsedData = JSON.parse(jsonString);
+            const validation = dataSchema.safeParse(parsedData);
+
+            if (!validation.success) {
+                return;
+            }
+
+            this.#datas.set(`${pathname}${search}`, validation.data);
+        } catch (error) {
+            console.error("Error on parse data:", error);
+            return;
+        }
+    }
+
+    #parseMetadata() {
+        const scriptElement = this.window.document.body.querySelector(
+            `script#${Enums.EScriptIds.metadata}[type="application/json"]`
+        );
+
+        if (!scriptElement) {
+            return;
+        }
+
+        try {
+            const { pathname, search } = this.window.location;
+            const jsonString = scriptElement.textContent.trim();
+            const parsedData = JSON.parse(jsonString);
+            const validation = metadataSchema.safeParse(parsedData);
+
+            if (!validation.success) {
+                return;
+            }
+
+            this.#metadatas.set(`${pathname}${search}`, validation.data);
+        } catch (error) {
+            console.error("Error on parse metadata:", error);
+            return;
+        }
+    }
+
+    async fetchRoute(
+        {
+            origin,
+            search,
+            pathname,
+            cache
+        }: Parameters<IRegoProvider["fetchRoute"]>[number] = {
+            pathname: this.window.location.pathname,
+            search: this.window.location.search,
+            origin: this.window.location.origin,
+            cache: false
+        }
+    ): ReturnType<IRegoProvider["fetchRoute"]> {
+        const uri = `${pathname}${search}`;
+
+        if (
+            cache &&
+            this.#datas.has(uri) &&
+            this.#metadatas.has(uri) &&
+            this.#staticDatas.has(uri)
+        ) {
+            return;
+        }
+
+        try {
+            const requestHeaders = new Headers();
+
+            requestHeaders.append("X-Requested-With", "XMLHttpRequest");
+            requestHeaders.append("Content-Type", "application/json");
+
+            const response = await fetch(`${origin}${uri}`, {
+                method: "GET",
+                headers: requestHeaders
+            });
+
+            if (!response.ok) {
+                throw new Error(`Can not fetch data [${uri}]`);
+            }
+
+            const parsedData = await response.json();
+            const validation = fullDataSchema.safeParse(parsedData);
+
+            if (!validation.success) {
+                throw validation.error;
+            }
+
+            this.#datas.set(uri, validation.data.data);
+            this.#metadatas.set(uri, validation.data.metadata);
+            this.#staticDatas.set(uri, validation.data.staticData);
+        } catch (error) {
+            console.error("Error on fetch full route data:", error);
+            return;
+        }
+    }
+
+    get routes() {
+        return this.#routes;
+    }
+
+    get staticData() {
+        const { pathname, search } = this.window.location;
+        return this.#staticDatas.get(`${pathname}${search}`);
+    }
+
+    get data() {
+        const { pathname, search } = this.window.location;
+        return this.#datas.get(`${pathname}${search}`);
+    }
+
+    get metadata() {
+        const { pathname, search } = this.window.location;
+        return this.#metadatas.get(`${pathname}${search}`);
     }
 }

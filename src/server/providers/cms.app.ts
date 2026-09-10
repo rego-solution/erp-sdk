@@ -76,7 +76,9 @@ export class CmsApp extends App implements ICmsApp {
             return Object.freeze({
                 hostname: data?.hostname || null,
                 routes: data?.routes || null,
-                data: data?.data
+                data: data?.data || null,
+                staticData: data?.staticData || null,
+                metadata: data?.metadata || null
             });
         } catch (error) {
             if (options?.logs) {

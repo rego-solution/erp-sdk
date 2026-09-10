@@ -1,5 +1,6 @@
 export enum EScriptIds {
-    routesId = "rego-routes",
-    dataId = "rego-data",
-    metadataId = "rego-metadata"
+    routes = "rego-routes",
+    data = "rego-data",
+    metadata = "rego-metadata",
+    staticData = "rego-static-data"
 }

@@ -11,9 +11,8 @@ export interface ICmsApp extends IApp {
     getRoutes(payload?: { pathname?: string }): Promise<{
         hostname?: string | null;
         routes?: Array<TBlueprintRoute> | null;
-        data?: {
-            metadata?: Record<string, string> | null;
-            dynamicData?: unknown;
-        } | null;
+        staticData?: Array<unknown> | Record<string, unknown> | null;
+        metadata?: Record<string, string | null | undefined> | null;
+        data?: Record<string, unknown> | null;
     } | null>;
 }
