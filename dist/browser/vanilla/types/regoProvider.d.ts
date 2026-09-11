@@ -1,4 +1,4 @@
-import type { TData, TMetadata, TRoute, TStaticData } from "../validators";
+import type { TData, TFullData, TMetadata, TRoute, TStaticData } from "../validators";
 export interface IRegoProvider {
     routes: Array<TRoute> | undefined;
     staticData: TStaticData;
@@ -8,6 +8,9 @@ export interface IRegoProvider {
         origin: string;
         pathname: string;
         search: string;
-        cache: boolean;
-    }): Promise<void>;
+        cache?: boolean;
+    } | {
+        url: URL;
+        cache?: boolean;
+    }): Promise<Readonly<TFullData> | undefined>;
 }

@@ -1,19 +1,13 @@
 import type { IRegoProvider } from "../types";
 
-import { object } from "zod";
 import { Enums } from "../constants";
 import {
     dataSchema,
+    fullDataSchema,
     metadataSchema,
     routeSchema,
     staticDataSchema
 } from "../validators";
-
-const fullDataSchema = object({
-    metadata: metadataSchema,
-    data: dataSchema,
-    staticData: staticDataSchema
-});
 
 export class RegoProvider implements IRegoProvider {
     #routes: IRegoProvider["routes"];
@@ -137,10 +131,8 @@ export class RegoProvider implements IRegoProvider {
 
     async fetchRoute(
         {
-            origin,
-            search,
-            pathname,
-            cache
+            cache,
+            ...payload
         }: Parameters<IRegoProvider["fetchRoute"]>[number] = {
             pathname: this.window.location.pathname,
             search: this.window.location.search,
@@ -148,15 +140,23 @@ export class RegoProvider implements IRegoProvider {
             cache: false
         }
     ): ReturnType<IRegoProvider["fetchRoute"]> {
-        const uri = `${pathname}${search}`;
+        const uri =
+            "url" in payload
+                ? `${payload.url.pathname}${payload.url.search}`
+                : `${payload.pathname}${payload.search}`;
 
-        if (
-            cache &&
-            this.#datas.has(uri) &&
-            this.#metadatas.has(uri) &&
-            this.#staticDatas.has(uri)
-        ) {
-            return;
+        if (cache) {
+            const data = this.#datas.get(uri),
+                metadata = this.#metadatas.get(uri),
+                staticData = this.#staticDatas.get(uri);
+
+            if (data && metadata && staticData) {
+                return Object.freeze({
+                    data,
+                    metadata,
+                    staticData
+                });
+            }
         }
 
         try {
@@ -184,6 +184,8 @@ export class RegoProvider implements IRegoProvider {
             this.#datas.set(uri, validation.data.data);
             this.#metadatas.set(uri, validation.data.metadata);
             this.#staticDatas.set(uri, validation.data.staticData);
+
+            return Object.freeze(validation.data);
         } catch (error) {
             console.error("Error on fetch full route data:", error);
             return;

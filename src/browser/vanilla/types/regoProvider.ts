@@ -1,4 +1,10 @@
-import type { TData, TMetadata, TRoute, TStaticData } from "../validators";
+import type {
+    TData,
+    TFullData,
+    TMetadata,
+    TRoute,
+    TStaticData
+} from "../validators";
 
 export interface IRegoProvider {
     routes: Array<TRoute> | undefined;
@@ -6,10 +12,17 @@ export interface IRegoProvider {
     data: TData;
     metadata: TMetadata;
 
-    fetchRoute(payload: {
-        origin: string;
-        pathname: string;
-        search: string;
-        cache: boolean;
-    }): Promise<void>;
+    fetchRoute(
+        payload:
+            | {
+                  origin: string;
+                  pathname: string;
+                  search: string;
+                  cache?: boolean;
+              }
+            | {
+                  url: URL;
+                  cache?: boolean;
+              }
+    ): Promise<Readonly<TFullData> | undefined>;
 }
