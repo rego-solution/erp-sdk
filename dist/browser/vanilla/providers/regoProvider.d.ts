@@ -3,6 +3,8 @@ export declare class RegoProvider implements IRegoProvider {
     #private;
     private readonly window;
     constructor(window: Window);
+    setMetadataToElement(...[key, value]: Parameters<IRegoProvider["setMetadataToElement"]>): void;
+    inferMetadata(payload: Parameters<IRegoProvider["inferMetadata"]>[number]): void;
     fetchRoute({ cache, ...payload }: Parameters<IRegoProvider["fetchRoute"]>[number]): ReturnType<IRegoProvider["fetchRoute"]>;
     get routes(): {
         path: string;
