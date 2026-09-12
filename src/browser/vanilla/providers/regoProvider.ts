@@ -129,17 +129,12 @@ export class RegoProvider implements IRegoProvider {
         }
     }
 
-    async fetchRoute(
-        {
-            cache,
-            ...payload
-        }: Parameters<IRegoProvider["fetchRoute"]>[number] = {
-            pathname: this.window.location.pathname,
-            search: this.window.location.search,
-            origin: this.window.location.origin,
-            cache: false
-        }
-    ): ReturnType<IRegoProvider["fetchRoute"]> {
+    async fetchRoute({
+        cache,
+        ...payload
+    }: Parameters<IRegoProvider["fetchRoute"]>[number]): ReturnType<
+        IRegoProvider["fetchRoute"]
+    > {
         const uri =
             "url" in payload
                 ? `${payload.url.pathname}${payload.url.search}`
@@ -162,8 +157,8 @@ export class RegoProvider implements IRegoProvider {
         try {
             const requestHeaders = new Headers();
 
-            requestHeaders.append("X-Requested-With", "XMLHttpRequest");
-            requestHeaders.append("Content-Type", "application/json");
+            requestHeaders.append("x-requested-with", "XMLHttpRequest");
+            requestHeaders.append("content-type", "application/json");
 
             const response = await fetch(`${origin}${uri}`, {
                 method: "GET",

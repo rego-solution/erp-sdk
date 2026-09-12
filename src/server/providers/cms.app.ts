@@ -53,10 +53,11 @@ export class CmsApp extends App implements ICmsApp {
                 pathname: pathname
             });
 
-            requestHeaders.append("X-Workspace-ID", workspaceId);
-            requestHeaders.append("X-App-ID", appId);
-            requestHeaders.append("Authorization", `Bearer ${authToken}`);
-            requestHeaders.append("Content-Type", "application/json");
+            requestHeaders.append("x-requested-with", "XMLHttpRequest");
+            requestHeaders.append("x-workspace-id", workspaceId);
+            requestHeaders.append("x-app-id", appId);
+            requestHeaders.append("authorization", `Bearer ${authToken}`);
+            requestHeaders.append("content-type", "application/json");
 
             const response = await fetch(
                 `${Variables.baseUri}/cms/v${

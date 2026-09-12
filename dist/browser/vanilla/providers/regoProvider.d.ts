@@ -3,7 +3,7 @@ export declare class RegoProvider implements IRegoProvider {
     #private;
     private readonly window;
     constructor(window: Window);
-    fetchRoute({ cache, ...payload }?: Parameters<IRegoProvider["fetchRoute"]>[number]): ReturnType<IRegoProvider["fetchRoute"]>;
+    fetchRoute({ cache, ...payload }: Parameters<IRegoProvider["fetchRoute"]>[number]): ReturnType<IRegoProvider["fetchRoute"]>;
     get routes(): {
         path: string;
         component: string;
