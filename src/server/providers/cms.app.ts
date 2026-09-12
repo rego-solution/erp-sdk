@@ -49,6 +49,9 @@ export class CmsApp extends App implements ICmsApp {
 
             const authToken = this.token || (await this.signToken());
             const requestHeaders = new Headers();
+            const params = new URLSearchParams({
+                pathname: pathname
+            });
 
             requestHeaders.append("X-Workspace-ID", workspaceId);
             requestHeaders.append("X-App-ID", appId);
@@ -58,7 +61,7 @@ export class CmsApp extends App implements ICmsApp {
             const response = await fetch(
                 `${Variables.baseUri}/cms/v${
                     options?.version || this.defaultVersion
-                }/blueprints/${this.#blueprintId}?pathname=${pathname}`,
+                }/blueprints/${this.#blueprintId}?${params}`,
                 {
                     method: "GET",
                     headers: requestHeaders
