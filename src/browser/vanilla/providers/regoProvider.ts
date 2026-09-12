@@ -182,10 +182,9 @@ export class RegoProvider implements IRegoProvider {
             case "title": {
                 const titleElement = this.#metadataElements.get(key);
 
-                (titleElement &&
+                titleElement &&
                     "innerText" in titleElement &&
-                    (titleElement.innerText = value?.trim())) ||
-                    "";
+                    (titleElement.innerText = value?.trim() || "");
                 return;
             }
 
