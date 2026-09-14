@@ -26,7 +26,7 @@ export class RegoProvider implements IRegoProvider {
 
     #parseRoutes() {
         const scriptElement = this.window.document.body.querySelector(
-            `script#${Enums.EScriptIds.routes}[type="application/json"]`
+            `script#${Enums.EScriptIds.routes}[type="application/ld+json"]`
         );
 
         if (!scriptElement) {
@@ -55,7 +55,7 @@ export class RegoProvider implements IRegoProvider {
 
     #parseStaticData() {
         const scriptElement = this.window.document.body.querySelector(
-            `script#${Enums.EScriptIds.staticData}[type="application/json"]`
+            `script#${Enums.EScriptIds.staticData}[type="application/ld+json"]`
         );
 
         if (!scriptElement) {
@@ -81,7 +81,7 @@ export class RegoProvider implements IRegoProvider {
 
     #parseData() {
         const scriptElement = this.window.document.body.querySelector(
-            `script#${Enums.EScriptIds.data}[type="application/json"]`
+            `script#${Enums.EScriptIds.data}[type="application/ld+json"]`
         );
 
         if (!scriptElement) {
@@ -107,7 +107,7 @@ export class RegoProvider implements IRegoProvider {
 
     #parseMetadata() {
         const scriptElement = this.window.document.body.querySelector(
-            `script#${Enums.EScriptIds.metadata}[type="application/json"]`
+            `script#${Enums.EScriptIds.metadata}[type="application/ld+json"]`
         );
 
         if (!scriptElement) {
@@ -305,6 +305,7 @@ export class RegoProvider implements IRegoProvider {
             const requestHeaders = new Headers();
 
             requestHeaders.append("x-requested-with", "XMLHttpRequest");
+            requestHeaders.append("x-fetch-target", "RegoRoute");
             requestHeaders.append("content-type", "application/json");
 
             const response = await fetch(`${origin}${uri}`, {
